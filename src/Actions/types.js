@@ -41,3 +41,8 @@ export const INPUT_ERROR = "INPUT_ERROR";
 export const IS_YOUR_FAV = "IS_YOUR_FAV";
 export const UPLOAD_NEW_IMAGE = "UPLOAD_NEW_IMAGE";
 export const IMAGE_ERROR = "IMAGE_ERROR";
+
+export const SEND_MESSAGE= " SEND_MESSAGE";
+export const FETCH_MY_MESSAGES = "FETCH_MY_MESSAGES";
+export const FETCH_MY_FLOW = "FETCH_MY_FLOW";
+export const MARK_AS_READ = "MARK_AS_READ";

@@ -19,7 +19,7 @@ import RegisterDialog from "./RegisterDialog";
 import config from "../config/config";
 import FileInput from "./AddActivity/FileInput";
 import defaultBG from "../Assets/Images/defaultBG.png";
-import Fixedbutton from "./Fixedbutton";
+import Bigbutton from "./Bigbutton";
 
 const styles = theme => ({
     root: {
@@ -33,8 +33,7 @@ const styles = theme => ({
         width: "100%",
         display: "flex",
         justifyContent: "space-between",
-        alignItems: "center"
-        // border: "1px solid green"
+        alignItems: "flex-end"
     },
 
     textField: {
@@ -310,9 +309,8 @@ class EditActivityPanel extends Component {
                 </div>
                 <div className="input-success">{msg}</div>
                 <div className={classes.btnGroup}>
-                    <Fixedbutton text="修改" type="submit" width="50%" />
-                    <Fixedbutton
-                        width="50%"
+                    <Bigbutton text="修改" type="submit" fixed />
+                    <Bigbutton
                         text="删除"
                         color="#D32F2F"
                         onClick={() => {
@@ -320,6 +318,7 @@ class EditActivityPanel extends Component {
                                 open: true
                             });
                         }}
+                        fixed
                     />
                 </div>
             </div>

@@ -20,7 +20,7 @@ export default (state = INITIAL_STATE, action) => {
              const wishId = Object.keys(action.payload)[0];
              const numOfLikes = Object.values(action.payload)[0];
              const newAll = state.all.map((wish)=>{
-                 if(wish.id == wishId){
+                 if(wish.id === wishId){
                     wish.likes= numOfLikes;
                  }
                  return wish;

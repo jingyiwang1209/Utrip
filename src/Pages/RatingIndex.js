@@ -189,17 +189,17 @@ class RatingIndex extends Component {
                         version=""
                         onClick={() => this.handlePopup(item, item.id)}
                     >
-                        <div className={classes.nonParentRatingsWrapper}>
-                            {nonParentRatings.length > 0 ? (
-                                this.renderNonParentRatings(
+                        {nonParentRatings.length > 0 ? (
+                            <div className={classes.nonParentRatingsWrapper}>
+                                {this.renderNonParentRatings(
                                     nonParentRatings,
                                     item.username,
                                     index
-                                )
-                            ) : (
-                                ""
-                            )}
-                        </div>
+                                )}
+                            </div>
+                        ) : (
+                            ""
+                        )}
                     </RatingItemParent>
                 );
             });

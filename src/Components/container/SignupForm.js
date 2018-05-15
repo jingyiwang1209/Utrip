@@ -30,7 +30,7 @@ class SignupForm extends Component {
     initialState: ""
   };
 
-  submitForm(values) {
+ submitForm(values) {
     const { history, match: { params: { version } } } = this.props;
     this.props.userSignupRequest(values, history, version);
   }

@@ -2,26 +2,36 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { withStyles } from "material-ui/styles";
-import classNames from "classnames";
+import * as actions from "../Actions";
 import config from "../config/config";
+import classNames from "classnames";
+
 import Avatar from "material-ui/Avatar";
 import FavoriteIcon from "material-ui-icons/Favorite";
 import ShareIcon from "material-ui-icons/Share";
+import Warning from "material-ui-icons/Warning";
 import IconButton from "material-ui/IconButton";
 import LocationOn from "material-ui-icons/LocationOn";
 import OpenInNew from "material-ui-icons/OpenInNew";
 import AttachMoney from "material-ui-icons/AttachMoney";
-import Dialog from "material-ui/Dialog";
-import * as actions from "../Actions";
+import KeyboardArrowLeft from "material-ui-icons/KeyboardArrowLeft";
 import RatingForm from "./RatingForm";
 import RatingIndex from "./RatingIndex";
 import RatingSummary from "./RatingSummary";
 import Button from "material-ui/Button";
-import KeyboardArrowLeft from "material-ui-icons/KeyboardArrowLeft";
+
 import PageHeader from "./PageHeader";
-import RegisterDialog from "./RegisterDialog";
 import defaultAvatar from "../Assets/Images/defaultAvatar.png";
 import defaultBG from "../Assets/Images/defaultBG.png";
+import BottomNav from "./BottomNav";
+
+import Dialog, {
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle
+} from "material-ui/Dialog";
+import TextField from "material-ui/TextField";
 
 const styles = theme => ({
     editBar: {
@@ -124,12 +134,19 @@ const styles = theme => ({
         width: 80,
         height: 80,
         border: "4px solid #fff"
+    },
+    warning:{
+        verticalAlign:-5,
+        marginRight:5,
+        color:"red"
     }
 });
 
 class Activity extends Component {
     state = {
-        open: false
+        open: false,
+        sub_value: null,
+        message: ""
     };
 
     handleClose = () => {
@@ -141,6 +158,37 @@ class Activity extends Component {
         this.props.fetchOneActivity(activityId);
         if (localStorage["jwtToken"]) {
             this.props.verifyYourFav(activityId);
+        }
+    }
+
+    handlePopup() {
+        this.setState({
+            open: true
+        });
+    }
+
+    changeMessage(message) {
+        this.setState({
+            message: message
+        });
+    }
+    sendMessage() {
+        const { id, userId } = this.props.activity;
+        const { message } = this.state;
+        // console.log(userId, message, id)
+        this.props.sendMessage(userId, message, id);
+        this.setState({
+            open: false
+        });
+    }
+
+    handleSubChange(event, sub_value) {
+        this.setState({ sub_value });
+        if (sub_value === 0) {
+            this.props.history.push("/myFavorites");
+        } else if (sub_value === 1) {
+        } else if (sub_value === 2) {
+        } else if (sub_value === 3) {
         }
     }
 
@@ -194,10 +242,7 @@ class Activity extends Component {
                         <div>{activity.username}</div>
                     </div>
                     <div>
-                        <Link
-                            className="unlink"
-                            to={`/editActivity/${id}`}
-                        >
+                        <Link className="unlink" to={`/editActivity/${id}`}>
                             <div className={classes.editBtn}>修改我的活动</div>
                         </Link>
                     </div>
@@ -259,12 +304,41 @@ class Activity extends Component {
         return (
             <div>
                 <Dialog
-                    fullScreen={fullScreen}
                     open={this.state.open}
                     onClose={this.handleClose}
-                    aria-labelledby="responsive-dialog-title"
+                    aria-labelledby="form-dialog-title"
                 >
-                    <RegisterDialog onClick={this.handleClose} />
+                    <DialogTitle id="form-dialog-title">
+                        @{activity.username} {activity.theme}
+                    </DialogTitle>
+                    <DialogContent>
+                        <DialogContentText>
+                           <Warning className={classes.warning}/>
+                            过敏体质者，疾病历史者请咨询医师后向向导说明情况。在医师，向导不鼓励参加该活动的情况下依然参加者，需自行承担因自身问题而触发的各种风险。
+                        </DialogContentText>
+                        <TextField
+                            autoFocus
+                            onChange={e => {
+                                this.changeMessage(e.target.value);
+                            }}
+                            margin="dense"
+                            id="name"
+                            label="消息"
+                            type="text"
+                            fullWidth
+                        />
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={this.handleClose} color="primary">
+                            取消
+                        </Button>
+                        <Button
+                            onClick={() => this.sendMessage()}
+                            color="primary"
+                        >
+                            发送消息
+                        </Button>
+                    </DialogActions>
                 </Dialog>
                 <PageHeader history={this.props.history} title="活动" />
                 {this.renderEditChoice()}
@@ -326,8 +400,7 @@ class Activity extends Component {
                         <li>
                             <div className={classes.detailTitle}>活动开始和结束日期</div>
                             <div className={classes.detailContent}>
-                                {activity.departdate} —{" "}
-                                {activity.finishdate}
+                                {activity.departdate} — {activity.finishdate}
                             </div>
                         </li>
 
@@ -372,6 +445,15 @@ class Activity extends Component {
                             />
                         </div>
                     </div>
+                    {!activity.isYourActivity ? (
+                        <BottomNav
+                            value={this.state.sub_value}
+                            onChange={this.handleSubChange.bind(this)}
+                            onClick={this.handlePopup.bind(this)}
+                        />
+                    ) : (
+                        ""
+                    )}
                 </div>
             </div>
         );

@@ -15,7 +15,7 @@ import Dialog from "material-ui/Dialog";
 import services from "../Data/services";
 import ConfirmDelete from "./ConfirmDelete";
 import RegisterDialog from "./RegisterDialog";
-import Fixedbutton from "./Fixedbutton";
+import Bigbutton from "./Bigbutton";
 import moment from "moment";
 import "moment/locale/zh-cn.js";
 
@@ -195,9 +195,8 @@ class EditWishPanel extends Component {
                 </div>
                 <div className="input-success">{msg}</div>
                 <div className={classes.btnGroup}>
-                    <Fixedbutton text="修改" type="submit" width="50%" />
-                    <Fixedbutton
-                        width="50%"
+                    <Bigbutton text="修改" type="submit" fixed/>
+                    <Bigbutton
                         text="删除"
                         color="#D32F2F"
                         onClick={() => {
@@ -205,6 +204,7 @@ class EditWishPanel extends Component {
                                 open: true
                             });
                         }}
+                        fixed
                     />
                 </div>
             </div>

@@ -126,12 +126,13 @@ class ActivityIndex extends Component {
   renderItems() {
     const classes = this.props.classes;
     const { activityData, version } = this.props;
-    return _.map(activityData, item => {
+    // key must be differnt from line 活动 {index} key
+    return _.map(activityData, (item,index) => {
       return (
         <Link
           to={`/activity/${item.id}/${version}`}
           className="unlink"
-          key={item.id}
+          key={index+20/3}
         >
           <Card className="card" style={{ borderRadius: 10 }}>
             <CardMedia className={classes.media} image={cardBG} title="travel">

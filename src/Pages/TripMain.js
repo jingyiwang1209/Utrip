@@ -89,13 +89,13 @@ class TripMain extends Component {
   }
 
   renderContent() {
-    let { message, activityData, version, classes } = this.props;
+    let { message, activityData, classes, match : { params : { version }} } = this.props;
     if (!activityData || activityData.length === 0) {
       return <div>Loading..</div>;
     } else {
       return (
         <div style={{ position: "relative" }}>
-          <ActivityIndex activityData={activityData} version={version} />
+          <ActivityIndex activityData={activityData} version={version} key={123}/>
           {message ? <div className={classes.bottomLine}>{message}</div> : ""}
         </div>
       );

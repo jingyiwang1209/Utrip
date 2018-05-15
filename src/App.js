@@ -36,7 +36,6 @@ import OpenPage from "./Pages/OpenPage";
 import Recommendation from "./Pages/Recommendation";
 
 import MyAccount from "./Pages/MyAccount";
-import MyMessage from "./Pages/MyMessage";
 import PrivateBasicInfo from "./Pages/PrivateBasicInfo";
 import PrivateFavorites from "./Pages/PrivateFavorites";
 
@@ -46,6 +45,8 @@ import AddActivity from "./Pages/AddActivity/AddActivity";
 import AddWish from "./Pages/AddWish/AddWish";
 import Activity from "./Pages/Activity";
 import PublicProfile from "./Pages/PublicProfile";
+import Message from "./Pages/Message";
+
 import RequireAuth from "./HOC/RequireAuth";
 import ActivityWishPanel from "./Pages/ActivityWishPanel";
 import LocationSearch from "material-ui-icons/LocationSearching";
@@ -53,8 +54,12 @@ import Favorite from "material-ui-icons/FavoriteBorder";
 import CardGiftcard from "material-ui-icons/CardGiftcard";
 import ChatBubbleOutline from "material-ui-icons/ChatBubbleOutline";
 import PropTypes from "prop-types";
-import UserFavorite from "material-ui-icons/Favorite";
+import UserFavorite from "material-ui-icons/FavoriteBorder";
 import Contacts from "material-ui-icons/Contacts";
+
+import { connect } from "react-redux";
+import * as actions from "./Actions";
+import Badge from "material-ui/Badge";
 
 const styleSheet = {
   root: {
@@ -70,20 +75,6 @@ const styleSheet = {
   },
   broot: {
     minWidth: 60
-  },
-
-  bottomBtn: {
-    position: "fixed",
-    bottom: 0,
-    right: 0,
-    height: 58,
-    // border: "1px solid red",
-    borderRadius: 0,
-    color: "#fff",
-    width: "50%",
-    marginRight: 0,
-    fontSize: "1.2rem",
-    letterSpacing: 2
   }
 };
 // WebFontLoader.load({
@@ -105,6 +96,13 @@ class App extends Component {
     main_value: this.main_valueSetter(this.props.location.pathname) || 0
   };
 
+  componentDidMount() {
+    console.log("App did mount")
+    if (localStorage.getItem("jwtToken")) {
+      this.props.fetchMyMessages();
+    }
+  }
+
   main_valueSetter(pathname) {
     if (pathname.includes("/recommendation/")) {
       return 0;
@@ -112,8 +110,10 @@ class App extends Component {
       return 1;
     } else if (pathname.includes("/wish/")) {
       return 2;
-    } else if (pathname.includes("/my/")) {
+    } else if (pathname.includes("/message")) {
       return 3;
+    } else if (pathname.includes("/my/")) {
+      return 4;
     }
   }
 
@@ -130,6 +130,8 @@ class App extends Component {
     } else if (main_value === 2) {
       this.props.history.push("/wish" + lan);
     } else if (main_value === 3) {
+      this.props.history.push("/message");
+    } else if (main_value === 4) {
       this.props.history.push("/my" + lan);
     }
   }
@@ -147,13 +149,14 @@ class App extends Component {
   renderBottomNav(props) {
     const { sub_value, main_value } = this.state;
 
-    const { classes, history: { location: { pathname } } } = this.props;
+    const { classes, history: { location: { pathname } }, unread } = this.props;
     if (
       pathname.includes("/editActivity/") ||
       pathname.includes("/editWish/") ||
       pathname.includes("/openPage") ||
       pathname.includes("/login") ||
-      pathname.includes("/signup")
+      pathname.includes("/signup") ||
+      pathname.includes("/ratingIndex")
     ) {
       return null;
     }
@@ -162,36 +165,7 @@ class App extends Component {
       pathname.match(/\/activity\/[0-9]/) ||
       pathname.match(/\/wish\/[0-9]/)
     ) {
-      return (
-        <span>
-          <BottomNavigation
-            value={sub_value}
-            onChange={this.handleSubChange.bind(this)}
-            showLabels
-          >
-            <BottomNavigationButton
-              classes={{ icon: classes.icon, root: classes.broot }}
-              label="我的收藏"
-              icon={<UserFavorite />}
-              style={{ position: "fixed", left: 0 }}
-            />
-
-            <BottomNavigationButton
-              classes={{ icon: classes.icon, root: classes.broot }}
-              style={{ position: "fixed", left: 80 }}
-              label="联系携U行"
-              icon={<Contacts />}
-            />
-          </BottomNavigation>
-          <Button
-            style={{ backgroundColor: "#1976D2" }}
-            raised
-            className={classes.bottomBtn}
-          >
-            我有兴趣
-          </Button>
-        </span>
-      );
+      return null;
     }
     return (
       <BottomNavigation
@@ -216,7 +190,20 @@ class App extends Component {
         <BottomNavigationButton
           classes={{ icon: classes.icon, root: classes.broot }}
           label="找心愿"
-          icon={<ChatBubbleOutline />}
+          icon={<UserFavorite />}
+        />
+        <BottomNavigationButton
+          classes={{ icon: classes.icon, root: classes.broot }}
+          label="消息"
+          icon={
+            unread === 0 ? (
+              <ChatBubbleOutline />
+            ) : (
+              <Badge badgeContent={unread} color="primary">
+                <ChatBubbleOutline />
+              </Badge>
+            )
+          }
         />
         <BottomNavigationButton
           classes={{ icon: classes.icon, root: classes.broot }}
@@ -231,7 +218,6 @@ class App extends Component {
     const { classes } = this.props;
     let value = this.state.value > 0 ? this.state.value : value;
     let { version } = this.state;
-
     return (
       <div>
         <div>
@@ -245,6 +231,8 @@ class App extends Component {
               path="/recommendation/:version"
               component={RequireAuth(Recommendation)}
             />
+
+            <Route exact path="/message" render={() => <Message />} />
             <Route
               exact
               path="/activity/:version"
@@ -283,7 +271,6 @@ class App extends Component {
               component={RequireAuth(PrivateFavorites)}
             />
 
-            <Route exact path="/message" component={MyMessage} />
             <Route
               exact
               path="/addActivity/:version"
@@ -342,7 +329,6 @@ class App extends Component {
               component={RequireAuth(RatingIndex)}
             />
 
-
             <Route
               path="/completeUserProfile/:version"
               component={RequireAuth(SignupWizard)}
@@ -357,6 +343,13 @@ class App extends Component {
     );
   }
 }
-export default withStyles(styleSheet)(withRouter(App));
 
-// export default withStyles(styleSheet)(withRouter(connect(null, actions)(App)));
+const mapStateToProps = state => {
+  // console.log("App-unread", state.MessageReducer.unread);
+  return {
+    unread: state.MessageReducer.unread
+  };
+};
+export default withStyles(styleSheet)(
+  withRouter(connect(mapStateToProps, actions)(App))
+);

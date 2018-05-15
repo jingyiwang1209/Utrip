@@ -50,7 +50,7 @@ export default (state = INITIAL_STATE, action) => {
             const activityId = Object.keys(action.payload)[0];
             const numOfLikes = Object.values(action.payload)[0];
             const newAll = state.all.map(activity => {
-                if (activity.id == activityId) {
+                if (activity.id === activityId) {
                     activity.likes = numOfLikes;
                 }
                 return activity;

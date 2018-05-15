@@ -6,5 +6,6 @@ export * from './userActions';
 export * from './ratingActions';
 export * from './favoriteActions';
 export * from './imageActions'
+export * from './messageAction';
 
 

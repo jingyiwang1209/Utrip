@@ -9,6 +9,7 @@ import WishReducer from "./wishReducer";
 import RatingReducer from "./ratingReducer";
 import FavoriteReducer from "./favoriteReducer";
 import ImageReducer from "./imageReducer";
+import MessageReducer from "./messageReducer";
 
 export default combineReducers({
     UserAuth,
@@ -20,5 +21,6 @@ export default combineReducers({
     WishReducer,
     FavoriteReducer,
     ImageReducer,
+    MessageReducer,
     form: formReducer
 });

@@ -7,7 +7,6 @@ import StarBorder from "material-ui-icons/StarBorder";
 import RatingIndex from "./RatingIndex";
 import TextField from "material-ui/TextField";
 import * as actions from "../Actions";
-import Dialog from "material-ui/Dialog";
 import RegisterDialog from "./RegisterDialog";
 import Bigbutton from "./Bigbutton";
 
@@ -114,17 +113,6 @@ class RatingForm extends Component {
         // console.log("State",this.state.message)
         return (
             <div>
-                <Dialog
-                    fullScreen={fullScreen}
-                    open={this.state.open}
-                    onClose={this.handleClose}
-                    aria-labelledby="responsive-dialog-title"
-                >
-                    <div>
-                        <RegisterDialog onClick={this.handleClose} />
-                    </div>
-                </Dialog>
-
                 <form>
                     <div>{this.state.stars}</div>
                     <TextField
@@ -146,10 +134,10 @@ class RatingForm extends Component {
                         }}
                         width="100%"
                     />
-                    <div className="input-error">
-                        {this.state.message || message}
-                    </div>
                 </form>
+                <div className="input-error">
+                    {this.state.message || message}
+                </div>
             </div>
         );
     }

@@ -24,9 +24,12 @@ class LoginForm extends Component {
     completed: 100
   };
 
-  submitForm(values) {
+  async submitForm(values) {
     const { history, match: { params: { version } } } = this.props;
-    this.props.userLogin(values, history, version);
+    const res = await this.props.userLogin(values, history, version);
+    if (res === "success") {
+      this.props.fetchMyMessages();
+    }
   }
 
   render() {

@@ -70,6 +70,8 @@ export const userLogin = (userData, history, version) => async dispatch => {
     });
 
     history.push("/recommendation/"+version);
+    return "success";
+
   } catch (err) {
     // err is an Object - Error: Request failed with status code 401.
     // err.message - string

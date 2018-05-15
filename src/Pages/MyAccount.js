@@ -9,7 +9,7 @@ import MyAccountRegisterHeader from "./MyAccountRegisterHeader";
 import Button from "material-ui/Button";
 import Dialog from "material-ui/Dialog";
 import RegisterDialog from "./RegisterDialog";
-
+import Bigbutton from "./Bigbutton";
 const styles = theme => ({
     list: {
         listStyle: "none",
@@ -131,16 +131,10 @@ class MyAccount extends Component {
                     <div>
                         <ul className={classes.list}>{this.renderItems()}</ul>
                     </div>
-                    <button
-                        style={{
-                            backgroundColor: "red",
-                            marginTop: 30,
-                            padding: 20
-                        }}
-                        onClick={() => this.props.logout(history, version)}
-                    >
-                        退出账户(FOR TESTING PURPOSE NOW)
-                    </button>
+
+                     <div className="centralize-button">
+                        <Bigbutton text="退出账户" onClick={() => this.props.logout(history, version)}/>
+                    </div>
                 </div>
             </div>
         );

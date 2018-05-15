@@ -8,6 +8,7 @@
     "classname": "0.0.0",
     "classnames": "^2.2.5",
     "downshift": "^1.31.12",
+    "emoji-mart": "^2.6.0",
     "fly": "^2.0.6",
     "install": "^0.10.2",
     "jquery": "^3.2.1",
